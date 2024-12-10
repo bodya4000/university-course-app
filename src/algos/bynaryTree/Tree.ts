@@ -32,11 +32,7 @@ class Tree {
 		return true;
 	}
 
-	private traverse(
-		current: TreeNode | null = this.root,
-		nodeValue: number,
-		traverseTill: ((current: TreeNode) => void) | Function
-	): TreeNode | null {
+	private traverse(current: TreeNode | null = this.root, nodeValue: number, traverseTill: ((current: TreeNode) => void) | Function): TreeNode | null {
 		if (!current) return null;
 		if (traverseTill(current)) return current;
 		if (nodeValue > current.getValue()) {
@@ -48,30 +44,22 @@ class Tree {
 
 	public findParent(nodeValue: number) {
 		const parent = this.traverse(this.root, nodeValue, current => {
-			return (
-				(nodeValue > current.getValue() && !current.getRight()) ||
-				(nodeValue <= current.getValue() && !current.getLeft())
-			);
+			return (nodeValue > current.getValue() && !current.getRight()) || (nodeValue <= current.getValue() && !current.getLeft());
 		});
 
 		if (parent instanceof TreeNode) {
-			return nodeValue > parent.getValue()
-				? { parent, branch: Branch.RIGHT }
-				: { parent, branch: Branch.LEFT };
+			return nodeValue > parent.getValue() ? { parent, branch: Branch.RIGHT } : { parent, branch: Branch.LEFT };
 		}
 		throw new Error('Cant find new parent');
 	}
 
 	public findNode(nodeValue: number) {
-		const foundNode = this.traverse(
-			this.root,
-			nodeValue,
-			currentNode => currentNode.getValue() == nodeValue
-		);
+		const foundNode = this.traverse(this.root, nodeValue, currentNode => currentNode.getValue() == nodeValue);
 
 		if (!foundNode) {
 			throw new Error('Node doesnt exists');
 		}
+		console.log(foundNode);
 
 		return foundNode;
 	}
@@ -85,19 +73,22 @@ class Tree {
 		if (!current) {
 			return false;
 		}
+
 		const parent = current.getParent();
 
+		// Випадок 1: Вузол не має нащадків
 		if (current.hasNoKids()) {
 			if (parent) {
 				if (current.isLeftChild()) {
 					parent.setLeftChild(null);
-					return true;
 				} else {
 					parent.setRightChild(null);
-					return true;
 				}
+			} else {
+				this.root = null;
 			}
-			return false;
+			current.setParent(null);
+			return true;
 		}
 
 		// Випадок 2: Вузол має одного нащадка
@@ -106,23 +97,25 @@ class Tree {
 			if (parent) {
 				if (current.isLeftChild()) {
 					parent.setLeftChild(child);
-					child?.setParent(parent);
-					return true;
 				} else {
 					parent.setRightChild(child);
-					child?.setParent(parent);
-					return true;
 				}
+			} else {
+				this.root = child;
 			}
-			return false;
+			child?.setParent(parent);
+			current.setParent(null);
+			return true;
 		}
 
 		// Випадок 3: Вузол має двох нащадків
 		if (current.hasTwoKids()) {
 			const successor = current.getRight()?.findTheMostLeftChild();
 			if (!successor) {
+				console.error('Помилка: successor не знайдено');
 				return false;
 			}
+
 			current.setValue(successor.getValue());
 
 			const successorParent = successor.getParent();
@@ -134,6 +127,9 @@ class Tree {
 				successorParent?.setRightChild(successorChild);
 			}
 
+			successorChild?.setParent(successorParent);
+
+			successor.setParent(null);
 			return true;
 		}
 

@@ -1,38 +1,27 @@
-import StackNodeBuilder from './utills/StackNodeBuilder';
-
-class StackNode {
+class StackNode<T> {
 	private id: number;
-	private nodeId: number;
-	private value: number;
-	private next: StackNode | undefined;
+	private data: T;
+	private next: StackNode<T> | undefined;
 
-	constructor(id: number, nodeId: number, value: number) {
+	constructor(id: number, data: T) {
 		this.id = id;
-		this.nodeId = nodeId;
-		this.value = value;
+		this.data = data;
 	}
 
-	getId() {
+	getId(): number {
 		return this.id;
 	}
-	getValue() {
-		return this.value;
+
+	getData(): T {
+		return this.data;
 	}
 
-	getNodeId() {
-		return this.nodeId;
-	}
-
-	getNext() {
+	getNext(): StackNode<T> | undefined {
 		return this.next;
 	}
 
-	setNext(next: StackNode) {
-		return (this.next = next);
-	}
-
-	static builder() {
-		return new StackNodeBuilder();
+	setNext(next: StackNode<T>): void {
+		this.next = next;
 	}
 }
 

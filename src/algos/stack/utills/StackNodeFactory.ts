@@ -1,14 +1,10 @@
 import StackNode from '../StackNode';
 
 class StackNodeFactory {
-	static idIncrementor = 0;
+	private static idIncrementor = 0;
 
-	static create(nodeId: number, nodeValue: number) {
-		return StackNode.builder()
-			.value(nodeValue)
-			.nodeId(nodeId)
-			.id(++this.idIncrementor)
-			.build();
+	static create<T>(data: T): StackNode<T> {
+		return new StackNode(StackNodeFactory.idIncrementor++, data);
 	}
 }
 

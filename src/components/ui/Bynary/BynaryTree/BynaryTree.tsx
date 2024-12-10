@@ -19,76 +19,29 @@ interface Props {
 	siblingDistance?: number;
 }
 
-const BynaryTree: FC<Props> = ({
-	data,
-	x,
-	y,
-	levelDistance = 60,
-	siblingDistance = 40,
-}) => {
-	const { leftChild, rightChild, leftX, rightX, childY, leftLine, rightLine } =
-		useNode({ data, x, y, levelDistance, siblingDistance });
+const BynaryTree: FC<Props> = ({ data, x, y, levelDistance = 60, siblingDistance = 40 }) => {
+	const { leftChild, rightChild, leftX, rightX, childY, leftLine, rightLine } = useNode({ data, x, y, levelDistance, siblingDistance });
 	const { current, isTraversing, addOptions, processingStatus } = useTree();
-	const isCurrent = useMemo(
-		() => current?.getNodeId() === data.getId(),
-		[current, data]
-	);
+	const isCurrent = useMemo(() => current?.getData().nodeId === data.getId(), [current, data]);
 	useUpdateCurrent(isCurrent);
-	const { newLeftChild, newRightChild } = useAddChild(
-		isCurrent,
-		isTraversing,
-		addOptions,
-		leftX,
-		rightX,
-		childY
-	);
+	const { newLeftChild, newRightChild } = useAddChild(isCurrent, isTraversing, addOptions, leftX, rightX, childY);
 
-	const renderNewChild = (child: NewChild | undefined) =>
-		child?.node && (
-			<BynaryTree data={child.node} x={child.x ?? 0} y={child.y ?? 0} />
-		);
+	const renderNewChild = (child: NewChild | undefined) => child?.node && <BynaryTree data={child.node} x={child.x ?? 0} y={child.y ?? 0} />;
 
-	const renderTreeNodeChild = (
-		child: TreeNode | null,
-		childX: number,
-		childY: number
-	) => child && <BynaryTree data={child} x={childX} y={childY} />;
+	const renderTreeNodeChild = (child: TreeNode | null, childX: number, childY: number) => child && <BynaryTree data={child} x={childX} y={childY} />;
 
 	const dispatch = useDispatch();
-	if (
-		isCurrent &&
-		!isTraversing &&
-		processingStatus == ProccessStatuses.DELETE
-	) {
+	if (isCurrent && !isTraversing && processingStatus == ProccessStatuses.DELETE) {
 		setTimeout(() => dispatch(deletNodeFromTree(data.getValue())), 500);
 	}
 
 	return (
 		<div>
-			<BynaryTreeNode
-				isCurrent={isCurrent}
-				x={x - 20}
-				y={y - 15}
-				value={data.getValue()}
-			/>
+			<BynaryTreeNode isCurrent={isCurrent} x={x - 20} y={y - 15} value={data.getValue()} />
 
 			<div className={styles.lines}>
-				{leftLine && (
-					<BynaryNodeLine
-						x={leftLine.x}
-						y={leftLine.y}
-						width={leftLine.width}
-						angle={leftLine.angle}
-					/>
-				)}
-				{rightLine && (
-					<BynaryNodeLine
-						x={rightLine.x}
-						y={rightLine.y}
-						width={rightLine.width}
-						angle={rightLine.angle}
-					/>
-				)}
+				{leftLine && <BynaryNodeLine x={leftLine.x} y={leftLine.y} width={leftLine.width} angle={leftLine.angle} />}
+				{rightLine && <BynaryNodeLine x={rightLine.x} y={rightLine.y} width={rightLine.width} angle={rightLine.angle} />}
 			</div>
 
 			<div className={styles.children}>

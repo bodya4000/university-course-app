@@ -1,12 +1,12 @@
 import StackNode from './StackNode';
 import StackNodeFactory from './utills/StackNodeFactory';
 
-class Stack {
-	private root: StackNode | undefined;
+class Stack<T> {
+	private root: StackNode<T> | undefined;
 
-	push(nodeId: number, value: number): void {
-		const newNode = StackNodeFactory.create(nodeId, value);
-		if (this.root === undefined) {
+	push(data: T): void {
+		const newNode = StackNodeFactory.create(data);
+		if (!this.root) {
 			this.root = newNode;
 		} else {
 			newNode.setNext(this.root);
@@ -14,8 +14,8 @@ class Stack {
 		}
 	}
 
-	pop(): StackNode | undefined {
-		if (this.root === undefined) {
+	pop(): StackNode<T> | undefined {
+		if (!this.root) {
 			return undefined;
 		}
 		const poppedNode = this.root;
@@ -27,27 +27,27 @@ class Stack {
 		return this.root === undefined;
 	}
 
-	peek(): StackNode | undefined {
+	peek(): StackNode<T> | undefined {
 		return this.root;
 	}
 
 	length(): number {
-		let result: number = 0;
+		let count = 0;
 		let currentNode = this.root;
 
 		while (currentNode) {
-			result += 1;
+			count++;
 			currentNode = currentNode.getNext();
 		}
-		return result;
+		return count;
 	}
 
-	list(): StackNode[] {
-		const result: StackNode[] = [];
+	list(): T[] {
+		const result: T[] = [];
 		let currentNode = this.root;
 
 		while (currentNode) {
-			result.push(currentNode);
+			result.push(currentNode.getData());
 			currentNode = currentNode.getNext();
 		}
 		return result;

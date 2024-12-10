@@ -13,23 +13,14 @@ export interface AddOptions {
 
 interface BynaryTreeState {
 	tree: Tree;
-	traversePath: Stack | undefined;
-	current: StackNode | undefined;
+	traversePath: Stack<{ nodeId: number; value: number }> | undefined;
+	current: StackNode<{ nodeId: number; value: number }> | undefined;
 	isTraversing: boolean;
 	processingStatus: ProccessStatuses | undefined;
 	addOptions: AddOptions | undefined;
 }
 
-const initialState: BynaryTreeState = {
-	tree: new Tree(),
-	traversePath: undefined,
-	current: undefined,
-	processingStatus: undefined,
-	addOptions: undefined,
-	isTraversing: false,
-};
-
-function calculateTraversePath(node: TreeNode): Stack {
+function calculateTraversePath(node: TreeNode): Stack<{ nodeId: number; value: number }> {
 	return node.getPath();
 }
 
@@ -48,6 +39,15 @@ function cleanup(state: BynaryTreeState): void {
 	state.processingStatus = undefined;
 }
 
+const initialState: BynaryTreeState = {
+	tree: new Tree(),
+	traversePath: undefined,
+	current: undefined,
+	processingStatus: undefined,
+	addOptions: undefined,
+	isTraversing: false,
+};
+
 export const treeSlice = createSlice({
 	name: 'tree',
 	initialState,
@@ -59,6 +59,8 @@ export const treeSlice = createSlice({
 
 		deletNodeFromTree(state, action: PayloadAction<number>) {
 			state.tree.delete(action.payload);
+			console.log(state.tree);
+
 			cleanup(state as BynaryTreeState);
 		},
 
@@ -73,13 +75,11 @@ export const treeSlice = createSlice({
 				console.error('Error finding node:', e);
 			}
 		},
-
 		findTraversePathForParent(state, action: PayloadAction<number>) {
 			try {
 				state.isTraversing = true;
 				const foundParent: ParentInfo = state.tree.findParent(action.payload);
 				console.log(foundParent);
-
 				const { parent, branch }: ParentInfo = foundParent;
 				state.traversePath = calculateTraversePath(parent);
 				updateCurrentFromPath(state as BynaryTreeState);
@@ -89,7 +89,6 @@ export const treeSlice = createSlice({
 				console.error('Error finding parent:', e);
 			}
 		},
-
 		updateCurrent(state) {
 			updateCurrentFromPath(state as BynaryTreeState);
 		},
@@ -103,14 +102,6 @@ export const treeSlice = createSlice({
 	},
 });
 
-export const {
-	addNodeToTree,
-	findTraversePathForNode,
-	findTraversePathForParent,
-	updateCurrent,
-	clearCurrent,
-	setProcessingStatus,
-	deletNodeFromTree,
-} = treeSlice.actions;
+export const { addNodeToTree, findTraversePathForNode, findTraversePathForParent, updateCurrent, clearCurrent, setProcessingStatus, deletNodeFromTree } = treeSlice.actions;
 
 export default treeSlice.reducer;
