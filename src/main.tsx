@@ -1,28 +1,11 @@
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from './components/screens/Home.tsx';
-import Tree from './components/screens/Tree.tsx';
-import { store } from './store/store.ts';
+import Layout from './components/screens/Layout';
+import { store } from './store/store';
 
-const router = createBrowserRouter([
-	{
-		path: '/',
-		element: <Home />,
-		errorElement: <>error</>,
-	},
-	{
-		path: '/tree',
-		element: <Tree />,
-	},
-	{
-		path: '/graph',
-		element: <Tree />,
-	},
-]);
-
-createRoot(document.getElementById('root')!).render(
+ReactDOM.render(
 	<Provider store={store}>
-		<RouterProvider router={router} />
-	</Provider>
+		<Layout />
+	</Provider>,
+	document.getElementById('root')
 );
