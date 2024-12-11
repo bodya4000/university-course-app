@@ -1,0 +1,10 @@
+.input {
+	&_view {
+		position: relative;
+		// left: 300px;
+		margin-top: 50px;
+		display: flex;
+		gap: 20px;
+		justify-content: center;
+	}
+}
