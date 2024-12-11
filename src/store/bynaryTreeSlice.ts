@@ -69,6 +69,7 @@ export const treeSlice = createSlice({
 				state.isTraversing = true;
 				const foundNode: TreeNode = state.tree.findNode(action.payload);
 				state.traversePath = calculateTraversePath(foundNode);
+
 				updateCurrentFromPath(state as BynaryTreeState);
 			} catch (e) {
 				state.isTraversing = false;

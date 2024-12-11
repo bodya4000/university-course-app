@@ -38,7 +38,7 @@ class TreeNode {
 	setRightChild(node: TreeNode | null) {
 		this.rightChild = node;
 	}
-	setParent(node: TreeNode) {
+	setParent(node: TreeNode | null) {
 		this.parent = node;
 	}
 

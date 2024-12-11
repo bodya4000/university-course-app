@@ -1,8 +1,36 @@
-import Stack from '../stack/Stack';
+import TarjanService from '../../services/TarjanService';
 import { AdjacencyList } from './types';
 
 class Graph {
 	private graph: AdjacencyList = {};
+	private tarjanService: TarjanService;
+
+	constructor() {
+		this.tarjanService = new TarjanService();
+
+		this.addEdge('A', 'B');
+		this.addEdge('B', 'A');
+		this.addEdge('B', 'C');
+		this.addEdge('A', 'D');
+		this.addEdge('C', 'D');
+		this.addEdge('D', 'E');
+		this.addEdge('E', 'C');
+		this.addEdge('D', 'F');
+		this.addEdge('F', 'G');
+		this.addEdge('G', 'H');
+		this.addEdge('E', 'H');
+		this.addEdge('H', 'F');
+
+		console.log(this.tarjanService.doTarjan('D', this.graph));
+	}
+
+	setGraph(graph: AdjacencyList) {
+		this.graph = graph;
+	}
+
+	getGraph() {
+		return this.graph;
+	}
 
 	addVertex(vertex: string) {
 		this.graph[vertex] = [];
@@ -33,25 +61,12 @@ class Graph {
 		this.graph[fromVertex] = this.graph[fromVertex].filter(vertex => vertex != toVertex);
 	}
 
-	// tarjan(): string[][] {
-	// 	return [[]];
-	// }
-
 	private vertexExists(vertex: string): boolean {
 		return !!this.graph[`${vertex}`];
 	}
 
-	public tarjan(startVertex: string) {
-		let idCounter = 0;
-		let stack = new Stack();
-		let visited = new Set();
-		let lowLinks = [];
-
-		let current = this.graph[startVertex];
-
-		for (const vertex in current) {
-			if (vertex in visited) continue;
-		}
+	public findStronglyConnectedComponents(startVertex: string) {
+		return this.tarjanService.doTarjan(startVertex, this.graph);
 	}
 }
 

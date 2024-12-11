@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import BaseButton from '../BaseButton/BaseButton';
 import styles from './ContentView.module.scss';
 
 interface Props {
@@ -8,13 +9,15 @@ interface Props {
 }
 
 const ContentView: FC<Props> = ({ text, to }) => {
-	const navigate = useNavigate();
+	const history = useHistory();
+
 	const onClick = () => {
-		navigate(to);
+		history.push(to);
 	};
 	return (
 		<div onClick={onClick} className={styles.view}>
-			{text}
+			<h2>{text}</h2>
+			<BaseButton disabled={false} text='start' onclick={onClick} />
 		</div>
 	);
 };

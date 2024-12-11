@@ -2,14 +2,29 @@
 	box-sizing: border-box;
 	display: flex;
 
+	flex-direction: column;
+	justify-content: space-around;
+
 	justify-content: center;
 	align-items: center;
 	border-radius: 5px;
-	border: 5px solid red;
+
+	background-color: rgb(104, 178, 224);
 
 	cursor: pointer;
 
 	transition: scale 0.3s ease 0.05s;
+
+	h2 {
+		flex: 1 1 auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	button {
+		margin-bottom: 100px;
+	}
 
 	&:hover {
 		scale: 1.005;

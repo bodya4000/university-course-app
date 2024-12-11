@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import treeReducer from './bynaryTreeSlice';
+import graphReducer from './graphSlice';
 
 export const store = configureStore({
 	reducer: {
 		tree: treeReducer,
+		graph: graphReducer,
 	},
 });
 
